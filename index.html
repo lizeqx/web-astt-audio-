@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Audio Duration</title>
+</head>
+<body>
+  <input type="file" id="file-input">
+  <div id="duration-container">
+    <span id="duration"></span>
+  </div>
+  <audio controls id="audio-element"></audio>
+  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg/dist/ffmpeg.min.js"></script>
+  <script>
+    const fileInput = document.getElementById('file-input');
+    const audioElement = document.getElementById('audio-element');
+    const durationElement = document.getElementById('duration');
+
+    function loadAudioAndDuration(file) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        const audioBlob = event.target.result;
+        audioElement.src = URL.createObjectURL(file);
+        
+        const ffmpeg = createFFmpeg({ log: true });
+        ffmpeg.load().then(() => {
+          ffmpeg.FS('writeFile', 'input.mp3', new Uint8Array(reader.result));
+
+          ffmpeg.run('-i', 'input.mp3', '-f', 'null', '-');
+
+          const output = ffmpeg.FS('readFile', 'ffmpeg2pass-0.log');
+          const durationRegex = /Duration: (\d{2}):(\d{2}):(\d{2})/i;
+          const matches = durationRegex.exec(output);
+
+          if (matches) {
+            const hours = parseInt(matches[1]);
+            const minutes = parseInt(matches[2]);
+            const seconds = parseInt(matches[3]);
+
+            const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+            const totalMinutes = Math.floor(totalSeconds / 60);
+
+            durationElement.textContent = `Duration: ${totalMinutes} minutes`;
+          } else {
+            console.log('Failed to retrieve duration');
+          }
+        });
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    fileInput.addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      loadAudioAndDuration(file);
+    });
+  </script>
+</body>
+</html>

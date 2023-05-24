@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "@ffmpeg/core": "^0.11.0",
+    "@ffmpeg/ffmpeg": "^0.11.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "node-fetch": "^3.3.1",
+    "path": "^0.12.7",
+    "webpack": "^5.83.1",
+    "webpack-dev-middleware": "^6.1.1"
+  },
+  "name": "web-astt-audio",
+  "version": "1.0.0",
+  "main": "ffmpeg-script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "webpack-cli": "^5.1.1"
+  }
+}
